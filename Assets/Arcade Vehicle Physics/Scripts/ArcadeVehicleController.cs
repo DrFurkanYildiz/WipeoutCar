@@ -37,7 +37,7 @@ namespace ArcadeVP
         [Range(1, 3)]
         public float MaxPitch;
         public AudioSource SkidSound;
-
+        public Joystick joystick;
         [HideInInspector]
         public float skidWidth;
 
@@ -55,8 +55,17 @@ namespace ArcadeVP
         }
         private void Update()
         {
-            horizontalInput = Input.GetAxis("Horizontal"); //turning input
-            verticalInput = Input.GetAxis("Vertical");     //accelaration input
+            if (Input.GetMouseButton(0))
+                verticalInput = 1;
+            else
+                verticalInput = 0;
+
+            //if (Input.touches[0].phase == TouchPhase.Began)
+            //    verticalInput = 1;
+
+            horizontalInput = joystick.Horizontal;
+            //horizontalInput = Input.GetAxis("Horizontal"); //turning input
+            //verticalInput = Input.GetAxis("Vertical");     //accelaration input
             Visuals();
             AudioManager();
 
