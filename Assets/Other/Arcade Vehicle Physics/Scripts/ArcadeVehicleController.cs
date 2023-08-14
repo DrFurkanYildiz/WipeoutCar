@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace ArcadeVP
 {
-    public class ArcadeAiVehicleController : MonoBehaviour
+    public class ArcadeVehicleController : MonoBehaviour
     {
         public enum groundCheck { rayCast, sphereCaste };
         public enum MovementMode { Velocity, AngularVelocity };
@@ -12,7 +12,8 @@ namespace ArcadeVP
         public groundCheck GroundCheck;
         public LayerMask drivableSurface;
 
-        public float MaxSpeed, accelaration, turn;
+        public float MaxSpeed, accelaration, turn, gravity = 7f, downforce = 5f;
+        public bool AirControl = false;
         public Rigidbody rb, carBody;
 
         [HideInInspector]
@@ -36,32 +37,17 @@ namespace ArcadeVP
         [Range(1, 3)]
         public float MaxPitch;
         public AudioSource SkidSound;
-
+        public Joystick joystick;
         [HideInInspector]
         public float skidWidth;
 
 
-        private float radius;
+        private float radius, horizontalInput, verticalInput;
         private Vector3 origin;
-
-        //ai
-        public Transform target;
-
-        //Ai stuff
-        [HideInInspector]
-        public float TurnAI = 1f;
-        [HideInInspector]
-        public float SpeedAI = 1f;
-        [HideInInspector]
-        public float brakeAI = 0f;
-        public float brakeAngle = 30f;
-
-        private float desiredTurning;
-
-
-
+        public float hor;
         private void Start()
         {
+            joystick = GameAssets.i.joystick;
             radius = rb.GetComponent<SphereCollider>().radius;
             if (movementMode == MovementMode.AngularVelocity)
             {
@@ -70,93 +56,21 @@ namespace ArcadeVP
         }
         private void Update()
         {
+            hor = joystick.Horizontal;
+
+            if (Input.GetMouseButton(0))
+                verticalInput = 1;
+            else
+                verticalInput = 0;
+
+            //if (Input.touches[0].phase == TouchPhase.Began)
+            //    verticalInput = 1;
+            horizontalInput = joystick.Horizontal;
+
+            //horizontalInput = Input.GetAxis("Horizontal"); //turning input
+            //verticalInput = Input.GetAxis("Vertical");     //accelaration input
             Visuals();
             AudioManager();
-
-            //
-            // the new method of calculating turn value
-            Vector3 aimedPoint = target.position;
-            aimedPoint.y = transform.position.y;
-            Vector3 aimedDir = (aimedPoint - transform.position).normalized;
-            Vector3 myDir = transform.forward;
-            myDir.Normalize();
-            desiredTurning = Mathf.Abs(Vector3.Angle(myDir, Vector3.ProjectOnPlane(aimedDir, transform.up)));
-            //
-
-            float reachedTargetDistance = 1f;
-            float distanceToTarget = Vector3.Distance(transform.position, target.position);
-            Vector3 dirToMovePosition = (target.position - transform.position).normalized;
-            float dot = Vector3.Dot(transform.forward, dirToMovePosition);
-            float angleToMove = Vector3.Angle(transform.forward, dirToMovePosition);
-            if (angleToMove > brakeAngle)
-            {
-                if (carVelocity.z > 15)
-                {
-                    brakeAI = 1;
-                }
-                else
-                {
-                    brakeAI = 0;
-                }
-
-            }
-            else { brakeAI = 0; }
-
-            if (distanceToTarget > reachedTargetDistance)
-            {
-
-                if (dot > 0)
-                {
-                    SpeedAI = 1f;
-
-                    float stoppingDistance = 5f;
-                    if (distanceToTarget < stoppingDistance)
-                    {
-                        brakeAI = 1f;
-                    }
-                    else
-                    {
-                        brakeAI = 0f;
-                    }
-                }
-                else
-                {
-                    float reverseDistance = 5f;
-                    if (distanceToTarget > reverseDistance)
-                    {
-                        SpeedAI = 1f;
-                    }
-                    else
-                    {
-                        brakeAI = -1f;
-                    }
-                }
-
-                float angleToDir = Vector3.SignedAngle(transform.forward, dirToMovePosition, Vector3.up);
-
-                if (angleToDir > 0)
-                {
-                    TurnAI = 1f * turnCurve.Evaluate(desiredTurning / 90);
-                }
-                else
-                {
-                    TurnAI = -1f * turnCurve.Evaluate(desiredTurning / 90);
-                }
-
-            }
-            else
-            {
-                if (carVelocity.z > 1f)
-                {
-                    brakeAI = -1f;
-                }
-                else
-                {
-                    brakeAI = 0f;
-                }
-                TurnAI = 0f;
-            }
-
 
         }
         public void AudioManager()
@@ -171,8 +85,6 @@ namespace ArcadeVP
                 SkidSound.mute = true;
             }
         }
-
-
 
 
         void FixedUpdate()
@@ -191,17 +103,17 @@ namespace ArcadeVP
                 //turnlogic
                 float sign = Mathf.Sign(carVelocity.z);
                 float TurnMultiplyer = turnCurve.Evaluate(carVelocity.magnitude / MaxSpeed);
-                if (SpeedAI > 0.1f || carVelocity.z > 1)
+                if (verticalInput > 0.1f || carVelocity.z > 1)
                 {
-                    carBody.AddTorque(Vector3.up * TurnAI * sign * turn * 100 * TurnMultiplyer);
+                    carBody.AddTorque(Vector3.up * horizontalInput * sign * turn * 100 * TurnMultiplyer);
                 }
-                else if (SpeedAI < -0.1f || carVelocity.z < -1)
+                else if (verticalInput < -0.1f || carVelocity.z < -1)
                 {
-                    carBody.AddTorque(Vector3.up * TurnAI * sign * turn * 100 * TurnMultiplyer);
+                    carBody.AddTorque(Vector3.up * horizontalInput * sign * turn * 100 * TurnMultiplyer);
                 }
 
                 //brakelogic
-                if (brakeAI > 0.1f)
+                if (Input.GetAxis("Jump") > 0.1f)
                 {
                     rb.constraints = RigidbodyConstraints.FreezeRotationX;
                 }
@@ -214,25 +126,37 @@ namespace ArcadeVP
 
                 if (movementMode == MovementMode.AngularVelocity)
                 {
-                    if (Mathf.Abs(SpeedAI) > 0.1f)
+                    if (Mathf.Abs(verticalInput) > 0.1f)
                     {
-                        rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, carBody.transform.right * SpeedAI * MaxSpeed / radius, accelaration * Time.deltaTime);
+                        rb.angularVelocity = Vector3.Lerp(rb.angularVelocity, carBody.transform.right * verticalInput * MaxSpeed / radius, accelaration * Time.deltaTime);
                     }
                 }
                 else if (movementMode == MovementMode.Velocity)
                 {
-                    if (Mathf.Abs(SpeedAI) > 0.1f && brakeAI < 0.1f)
+                    if (Mathf.Abs(verticalInput) > 0.1f && Input.GetAxis("Jump") < 0.1f)
                     {
-                        rb.velocity = Vector3.Lerp(rb.velocity, carBody.transform.forward * SpeedAI * MaxSpeed, accelaration / 10 * Time.deltaTime);
+                        rb.velocity = Vector3.Lerp(rb.velocity, carBody.transform.forward * verticalInput * MaxSpeed, accelaration / 10 * Time.deltaTime);
                     }
                 }
+
+                // down froce
+                rb.AddForce(-transform.up * downforce * rb.mass);
 
                 //body tilt
                 carBody.MoveRotation(Quaternion.Slerp(carBody.rotation, Quaternion.FromToRotation(carBody.transform.up, hit.normal) * carBody.transform.rotation, 0.12f));
             }
             else
             {
+                if (AirControl)
+                {
+                    //turnlogic
+                    float TurnMultiplyer = turnCurve.Evaluate(carVelocity.magnitude / MaxSpeed);
+
+                    carBody.AddTorque(Vector3.up * horizontalInput * turn * 100 * TurnMultiplyer);
+                }
+
                 carBody.MoveRotation(Quaternion.Slerp(carBody.rotation, Quaternion.FromToRotation(carBody.transform.up, Vector3.up) * carBody.transform.rotation, 0.02f));
+                rb.velocity = Vector3.Lerp(rb.velocity, rb.velocity + Vector3.down * gravity, Time.deltaTime * gravity);
             }
 
         }
@@ -242,7 +166,7 @@ namespace ArcadeVP
             foreach (Transform FW in FrontWheels)
             {
                 FW.localRotation = Quaternion.Slerp(FW.localRotation, Quaternion.Euler(FW.localRotation.eulerAngles.x,
-                                   30 * TurnAI, FW.localRotation.eulerAngles.z), 0.1f);
+                                   30 * horizontalInput, FW.localRotation.eulerAngles.z), 0.1f);
                 FW.GetChild(0).localRotation = rb.transform.localRotation;
             }
             RearWheels[0].localRotation = rb.transform.localRotation;
@@ -252,7 +176,7 @@ namespace ArcadeVP
             if (carVelocity.z > 1)
             {
                 BodyMesh.localRotation = Quaternion.Slerp(BodyMesh.localRotation, Quaternion.Euler(Mathf.Lerp(0, -5, carVelocity.z / MaxSpeed),
-                                   BodyMesh.localRotation.eulerAngles.y, Mathf.Clamp(desiredTurning * TurnAI, -BodyTilt, BodyTilt)), 0.05f);
+                                   BodyMesh.localRotation.eulerAngles.y, BodyTilt * horizontalInput), 0.05f);
             }
             else
             {
@@ -313,5 +237,6 @@ namespace ArcadeVP
             }
 
         }
+
     }
 }
