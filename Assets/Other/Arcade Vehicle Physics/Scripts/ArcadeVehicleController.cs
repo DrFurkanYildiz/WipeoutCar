@@ -37,7 +37,7 @@ namespace ArcadeVP
         [Range(1, 3)]
         public float MaxPitch;
         public AudioSource SkidSound;
-        public Joystick joystick;
+        //public Joystick joystick;
         [HideInInspector]
         public float skidWidth;
 
@@ -47,7 +47,7 @@ namespace ArcadeVP
         public float ver;
         private void Start()
         {
-            joystick = GameAssets.i.joystick;
+            //joystick = GameAssets.i.joystick;
             radius = rb.GetComponent<SphereCollider>().radius;
             if (movementMode == MovementMode.AngularVelocity)
             {
@@ -56,19 +56,19 @@ namespace ArcadeVP
         }
         private void Update()
         {
-            ver = joystick.Vertical;
+            //ver = joystick.Vertical;
 
-            if (Input.GetMouseButton(0))
-                verticalInput = 1;
-            else
-                verticalInput = 0;
-
-            //if (Input.touches[0].phase == TouchPhase.Began)
+            //if (Input.GetMouseButton(0))
             //    verticalInput = 1;
-            horizontalInput = joystick.Horizontal;
+            //else
+            //    verticalInput = 0;
 
-            //horizontalInput = Input.GetAxis("Horizontal"); //turning input
-            //verticalInput = Input.GetAxis("Vertical");     //accelaration input
+            ////if (Input.touches[0].phase == TouchPhase.Began)
+            ////    verticalInput = 1;
+            //horizontalInput = joystick.Horizontal;
+
+            horizontalInput = Input.GetAxis("Horizontal"); //turning input
+            verticalInput = Input.GetAxis("Vertical");     //accelaration input
             Visuals();
             AudioManager();
 
