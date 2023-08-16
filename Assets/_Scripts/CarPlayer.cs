@@ -5,7 +5,7 @@ public class CarPlayer : MonoBehaviour, ICar
 {
     public static CarPlayer CreateCar(CarSO carSO, Vector3 spawnPosition)
     {
-        GameObject go = Instantiate(GameAssets.i.PlayerPrefabs[0], spawnPosition, Quaternion.identity);
+        GameObject go = Instantiate(GameAssets.i.PlayerPrefabs[0], spawnPosition, Quaternion.Euler(Vector3.up * 120f));
         CarPlayer carAI = go.GetComponent<CarPlayer>();
         carAI.carSO = carSO;
         return carAI;

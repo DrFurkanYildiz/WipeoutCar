@@ -15,6 +15,6 @@ MonoBehaviour:
   CarName: Davida
   CarClass: 1
   Prefab: {fileID: 5770414275212842395, guid: eef25e4441319ac4381970c60f59a0b7, type: 3}
-  MaxSpeed: 45
-  Accelaration: 10
+  MaxSpeed: 60
+  Accelaration: 30
   TurnSpeed: 10

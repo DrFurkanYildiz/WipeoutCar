@@ -44,7 +44,7 @@ namespace ArcadeVP
 
         private float radius, horizontalInput, verticalInput;
         private Vector3 origin;
-        public float hor;
+        public float ver;
         private void Start()
         {
             joystick = GameAssets.i.joystick;
@@ -56,7 +56,7 @@ namespace ArcadeVP
         }
         private void Update()
         {
-            hor = joystick.Horizontal;
+            ver = joystick.Vertical;
 
             if (Input.GetMouseButton(0))
                 verticalInput = 1;

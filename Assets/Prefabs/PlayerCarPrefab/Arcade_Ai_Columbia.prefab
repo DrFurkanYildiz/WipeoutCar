@@ -15441,7 +15441,7 @@ Transform:
   - {fileID: 8881222511844422311}
   - {fileID: 6196367803727845817}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &4636721404100194452
 BoxCollider:
@@ -15480,7 +15480,7 @@ MonoBehaviour:
   GroundCheck: 0
   drivableSurface:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 4294967295
   MaxSpeed: 80
   accelaration: 10
   turn: 10
@@ -15571,7 +15571,7 @@ MonoBehaviour:
   SkidSound: {fileID: 6936211958715822331}
   joystick: {fileID: 0}
   skidWidth: 0.17504606
-  hor: 0
+  ver: 0
 --- !u!54 &6709018627899879452
 Rigidbody:
   m_ObjectHideFlags: 0

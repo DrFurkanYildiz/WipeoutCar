@@ -5032,7 +5032,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &6300659742497005569
 Transform:
   m_ObjectHideFlags: 0
@@ -5659,7 +5659,7 @@ MonoBehaviour:
   GroundCheck: 1
   drivableSurface:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 4294967295
   MaxSpeed: 60
   accelaration: 15
   turn: 15
@@ -5973,6 +5973,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43fad9d12eb513e49b35227606aaa3c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  carSO: {fileID: 0}
 --- !u!1 &6491472870034281456
 GameObject:
   m_ObjectHideFlags: 0

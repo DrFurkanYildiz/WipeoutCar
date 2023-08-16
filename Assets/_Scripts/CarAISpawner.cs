@@ -18,8 +18,11 @@ public class CarAISpawner : MonoBehaviour
 
         SpawnPlayer();
 
+        CarAI car = CarAI.CreateCar(GameAssets.i.CarList[0], spwnArray[1].position);
+        allCars.Add(car);
+
         StartCoroutine(CountdownStart());
-        StartCoroutine(SpawnCar());
+        //StartCoroutine(SpawnCar());
     }
     public void Test()
     {
@@ -31,7 +34,7 @@ public class CarAISpawner : MonoBehaviour
             carPlayer.DestroySelf();
 
 
-        carPlayer = CarPlayer.CreateCar(playerCarSO, spwnArray[4].position);
+        carPlayer = CarPlayer.CreateCar(playerCarSO, spwnArray[0].position);
     }
     IEnumerator SpawnCar()
     {

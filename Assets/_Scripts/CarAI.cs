@@ -5,7 +5,7 @@ public class CarAI : MonoBehaviour, ICar
 {
     public static CarAI CreateCar(CarSO carSO, Vector3 spawnPosition)
     {
-        GameObject go = Instantiate(carSO.Prefab ,spawnPosition, Quaternion.identity);
+        GameObject go = Instantiate(carSO.Prefab, spawnPosition, Quaternion.Euler(Vector3.up * 120f));
         CarAI carAI = go.GetComponent<CarAI>();
         carAI.carSO = carSO;
         return carAI;

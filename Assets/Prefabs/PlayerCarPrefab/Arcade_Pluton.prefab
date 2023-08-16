@@ -20698,7 +20698,7 @@ MonoBehaviour:
   GroundCheck: 0
   drivableSurface:
     serializedVersion: 2
-    m_Bits: 64
+    m_Bits: 4294967295
   MaxSpeed: 65
   accelaration: 6
   turn: 4
@@ -20789,7 +20789,7 @@ MonoBehaviour:
   SkidSound: {fileID: 8706462955062641771}
   joystick: {fileID: 0}
   skidWidth: 0.12122903
-  hor: 0
+  ver: 0
 --- !u!54 &633035388411830532
 Rigidbody:
   m_ObjectHideFlags: 0
