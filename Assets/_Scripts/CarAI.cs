@@ -1,7 +1,7 @@
 using ArcadeVP;
 using UnityEngine;
 
-public class CarAI : MonoBehaviour
+public class CarAI : MonoBehaviour, ICar
 {
     public static CarAI CreateCar(CarSO carSO, Vector3 spawnPosition)
     {
@@ -13,7 +13,10 @@ public class CarAI : MonoBehaviour
 
     ArcadeAiVehicleController vehicleController;
     [SerializeField] CarSO carSO;
-    [SerializeField] private bool setStart;
+    private bool setStart;
+
+    public string CarName { get => carSO.CarName; }
+
     private void Start()
     {
         vehicleController = GetComponent<ArcadeAiVehicleController>();
@@ -24,5 +27,9 @@ public class CarAI : MonoBehaviour
     private void Update()
     {
         vehicleController.IsStart = setStart;
+    }
+    public void SetStart(bool set)
+    {
+        setStart = set;
     }
 }

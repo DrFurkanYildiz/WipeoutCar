@@ -44,13 +44,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44ef51d9c6da2214bbe4e94042a7e9a9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  joystick: {fileID: 0}
   PlayerPrefabs:
   - {fileID: 8178824381655129339, guid: a7c35924da3313c4aba6d8a973b73096, type: 3}
   - {fileID: 5855607913420698384, guid: 8c16d952aebab454a84a6959d1603683, type: 3}
   aiCarList:
   - {fileID: 11400000, guid: d974827f4757f1e438b6852da8cf2a32, type: 2}
-  - {fileID: 11400000, guid: 0748ef8b95b098547bdc9052b40c5936, type: 2}
-  - {fileID: 11400000, guid: 99a781c54e6904549a20082311a6df6c, type: 2}
-  - {fileID: 11400000, guid: 4c46f143c6448b84a97fae1efd9a8c27, type: 2}
-  - {fileID: 11400000, guid: 04f37316c2dfc3a47b6d55b116aa0b55, type: 2}
-  - {fileID: 11400000, guid: 8007cc05fe592d6489e0f07a2a4bd973, type: 2}

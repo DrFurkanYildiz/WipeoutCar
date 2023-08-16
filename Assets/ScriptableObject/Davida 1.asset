@@ -10,9 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: df4f8fcd3cb1e3f45b631e6f1cfd5e32, type: 3}
-  m_Name: Davida
+  m_Name: Davida 1
   m_EditorClassIdentifier: 
-  CarName: Davida
+  CarName: Davida1
   CarClass: 1
   Prefab: {fileID: 5770414275212842395, guid: eef25e4441319ac4381970c60f59a0b7, type: 3}
   MaxSpeed: 45

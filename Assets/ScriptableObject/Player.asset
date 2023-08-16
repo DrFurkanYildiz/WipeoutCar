@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: df4f8fcd3cb1e3f45b631e6f1cfd5e32, type: 3}
   m_Name: Player
   m_EditorClassIdentifier: 
+  CarName: Player
   CarClass: 0
   Prefab: {fileID: 0}
   MaxSpeed: 66

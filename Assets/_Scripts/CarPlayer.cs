@@ -1,7 +1,7 @@
 using ArcadeVP;
 using UnityEngine;
 
-public class CarPlayer : MonoBehaviour
+public class CarPlayer : MonoBehaviour, ICar
 {
     public static CarPlayer CreateCar(CarSO carSO, Vector3 spawnPosition)
     {
@@ -13,6 +13,9 @@ public class CarPlayer : MonoBehaviour
 
     ArcadeVehicleController vehicleController;
     [SerializeField] CarSO carSO;
+
+    public string CarName => carSO.CarName;
+
     private void Start()
     {
         vehicleController = GetComponent<ArcadeVehicleController>();

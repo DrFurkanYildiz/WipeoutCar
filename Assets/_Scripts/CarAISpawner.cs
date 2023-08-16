@@ -1,39 +1,29 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using TMPro;
 
 public class CarAISpawner : MonoBehaviour
 {
+    private List<CarAI> allCars = new List<CarAI>();
     public Transform[] spwnArray;
-    public int coin;
-    public int[] testLevel;
-    private LevelSystem levelSystem;
-    public int level;
-    public int exp;
-
+    private int countdownTime = 3;
     private CarPlayer carPlayer;
     [SerializeField] private CarSO playerCarSO;
+
+    [SerializeField] private TextMeshProUGUI countdownText;
 
     void Start()
     {
 
-        levelSystem = new LevelSystem(testLevel);
-        levelSystem.OnLevelChanged += () => playerCarSO.MaxSpeed += 2f;
-
         SpawnPlayer();
 
-        CarAI.CreateCar(GameAssets.i.CarList[0], spwnArray[2].position);
-
-        //StartCoroutine(SpawnCar());
-    }
-    private void Update()
-    {
-        level = levelSystem.GetLevel();
-        exp = levelSystem.GetExperience();
+        StartCoroutine(CountdownStart());
+        StartCoroutine(SpawnCar());
     }
     public void Test()
     {
-        levelSystem.AddExperience(10);
+        LevelManager.Instance.LoadScene(SceneType.Main);   
     }
     public void SpawnPlayer()
     {
@@ -47,8 +37,34 @@ public class CarAISpawner : MonoBehaviour
     {
         for (int i = 0; i < spwnArray.Length; i++)
         {
-            CarAI.CreateCar(GameAssets.i.CarList[i], spwnArray[i].position);
-            yield return new WaitForSeconds(.5f);
+            if (i == 4)
+                continue;
+            CarAI car = CarAI.CreateCar(GameAssets.i.CarList[i], spwnArray[i].position);
+            allCars.Add(car);
+            yield return new WaitForSeconds(.05f);
         }
+    }
+
+
+    IEnumerator CountdownStart()
+    {
+        while (countdownTime > 0)
+        {
+            countdownText.text = countdownTime.ToString();
+            //DontDestroyAudio.Instance.EffectOneShot(SoundType.BonusCountdownEffect);
+
+            yield return new WaitForSeconds(1f);
+            countdownTime--;
+        }
+
+        countdownText.text = "GO!";
+        //DontDestroyAudio.Instance.EffectOneShot(SoundType.BonusCountdownStartEffect);
+
+        //GameStart
+
+        yield return new WaitForSeconds(1f);
+        countdownText.gameObject.SetActive(false);
+        //isTimeCompleted = false;
+        allCars.ForEach(c => c.SetStart(true));
     }
 }
